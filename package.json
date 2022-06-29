@@ -1,0 +1,22 @@
+{
+  "name": "photo-caption-contest",
+  "version": "1.0.0",
+  "description": "A backend where users will participate in a photo caption contest",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alex Vranas",
+  "license": "ISC",
+  "repository": "https://github.com/avranas/photo-caption-contest.git",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "nodemon": "^2.0.18",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.21.2"
+  }
+}

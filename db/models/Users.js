@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
-const db = require('./db_setup.js');
+const db = require('../db_setup.js');
+const Caption = require('./Captions.js');
 
 const User = db.define('user', {
    id: {
@@ -17,7 +18,11 @@ const User = db.define('user', {
       allowNull: false
    }
 }, {
-   timestamps: false
+   timestamps: false,
+   underscored: true
 });
+
+User.hasMany(Caption);
+Caption.belongsTo(User);
 
 module.exports = User;

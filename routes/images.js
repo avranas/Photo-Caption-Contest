@@ -1,6 +1,8 @@
 const express = require('express');
+const Caption = require('../db/models/Captions.js');
 const imageRouter = express.Router();
-const Image = require('../db/Images')
+const Image = require('../db/models/Images.js');
+const User = require('../db/models/Users.js');
 
 //Get all images
 imageRouter.get('/', async (req, res) => {
@@ -13,13 +15,37 @@ imageRouter.get('/', async (req, res) => {
    }
 });
 
-//Get one image with ID
+//Get one image location with id
+//Also returns all the captions for this image
 imageRouter.get('/:id', async (req, res) => {
    try{
-      const result = await Image.findOne({
+      const imageResult = await Image.findOne({
          where: {id: req.params.id}
       });
-      res.status(200).send(result);
+      const captionsResult = await Caption.findAll({
+         where: {image_id: req.params.id},
+         include: [{
+           model: User,
+           required: true
+          }],
+         order: [
+            ['time', 'DESC']
+        ],
+      });
+      const sendThis = [];
+      captionsResult.forEach(e => {
+         const newEntry = {};
+         newEntry.user = e.user.username;
+         newEntry.caption = e.caption;
+         sendThis.push(newEntry);
+      });
+      //res.status(200).send(sendThis);
+      res.render('view-image.ejs', {
+         username: req.user.username,
+         imageLocation: `/images/${imageResult.image_location}`,
+         captions: sendThis,
+         image_id: req.params.id
+      });
    }catch(err){
       console.log(err);
       res.status(400).send();

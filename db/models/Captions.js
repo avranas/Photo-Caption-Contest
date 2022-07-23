@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const db = require('./db_setup.js');
+const db = require('../db_setup.js');
 
 const Caption = db.define('caption', {
    id: {
@@ -19,9 +19,13 @@ const Caption = db.define('caption', {
    caption: {
       type: Sequelize.STRING,
       allowNull: false
+   },
+   time: {
+      type: Sequelize.INTEGER,
+      allowNull: false
    }
 }, {
-   timestamps: false
+   underscored: true
 });
 
 module.exports = Caption;

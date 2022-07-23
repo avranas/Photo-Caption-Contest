@@ -1,0 +1,29 @@
+<link href="/style.css" rel="stylesheet" type="text/css">
+<h1>Residential Drunk Photo Caption Contest</h1>
+<p>Hi <%= username%></p>
+<img src=<%= imageLocation%> width="400" height="600">
+<br>
+<hr>
+<ul>
+   <% for(let caption of captions){ %>
+      <li><%=caption.user%>:  <%=caption.caption%></li>
+   <% } %>
+</ul>
+<hr>
+<br>
+<form action="/captions" method="POST">
+   <div>
+      <label for="newCaption">New Caption</label>
+      <input type="text" id="new_caption" name="new_caption" required>
+      <input type="hidden" id="image_id" name="image_id" value=<%=image_id%>>
+   </div>
+   <button type="submit">Submit</button>
+</form>
+<hr>
+<br>
+<a href="/images/1">Photo 1</a>
+<a href="/images/2">Photo 2</a>
+<a href="/images/3">Photo 3</a>
+<a href="/images/4">Photo 4</a>
+<br><br>
+<a href="/logout">Log out</a>

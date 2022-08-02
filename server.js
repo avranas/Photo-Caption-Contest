@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const initalizePassport = require('./passport-config');
 
 //This allows us to use .ejs
-app.set('view-engine', 'ejs')
+//app.set('view-engine', 'ejs')
 //This makes req.body.username work
 app.use(express.urlencoded({extended: false}));
 app.use(cors());
@@ -25,6 +25,9 @@ app.use(passport.session());
 app.use(bodyParser.json());
 
 //Routes
+app.get('/', (req, res, next) => {
+   res.status(200).send('Hello world');
+});
 app.use('/captions', require('./routes/captions.js')); 
 app.use('/users', require('./routes/users.js'));
 app.use('/images', require('./routes/images.js'));

@@ -26,6 +26,7 @@ app.use(bodyParser.json());
 
 //Routes
 app.get('/', (req, res, next) => {
+   console.log('Hello world');
    res.status(200).send('Hello world');
 });
 app.use('/captions', require('./routes/captions.js')); 

@@ -1,10 +1,13 @@
 const express = require('express');
 const passport = require('passport');
 const loginRouter = express.Router();
+const {checkNotAuthenticated} = require('../authentication-check.js');
 
-loginRouter.post('/', passport.authenticate('local', {
-   successRedirect: '/',
-   failureRedirect: '/login'
-}));
+loginRouter.post('/', checkNotAuthenticated, passport.authenticate('local', {
+   //successRedirect: '/',
+   //failureRedirect: '/login'
+}), (req, res, next) => {
+   res.status(200).send(`Successfully logged in as: ${req.user.username}`);
+});
 
 module.exports = loginRouter;

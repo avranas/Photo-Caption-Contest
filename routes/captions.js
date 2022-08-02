@@ -1,8 +1,9 @@
 const express = require('express');
 const captionRouter = express.Router();
-const Caption = require('../db/models/Captions.js');
+const Caption = require('../db/models/Captions');
 const NodeCache = require('node-cache');
 const cache = new NodeCache({ stdTTL: 10 });
+const {checkAuthenticated} = require('../authentication-check');
 
 //Get all captions
 captionRouter.get('/', async (req, res) => {
@@ -17,7 +18,7 @@ captionRouter.get('/', async (req, res) => {
       }
    }catch(err){
       console.log(err);
-      res.status(400).send();
+      res.status(400).send("Something went wrong");
    }
 });
 
@@ -30,11 +31,20 @@ captionRouter.get('/:id', async (req, res) => {
       res.status(200).send(result);
    }catch(err){
       console.log(err);
-      res.status(400).send();
+      res.status(400).send("Something went wrong");
    }
 });
 
-captionRouter.post('/', async (req, res) => {
+/*Post a new caption
+Example:
+POST localhost:3000/captions
+Body (JSON):
+{
+    "new_caption": "Hello world",
+    "image_id": 1
+}
+*/
+captionRouter.post('/', checkAuthenticated, async (req, res) => {
    try {
       const newCaption = req.body.new_caption;
       const imageID = req.body.image_id;
@@ -45,31 +55,11 @@ captionRouter.post('/', async (req, res) => {
          caption: newCaption,
          time: Date.now()
       });
-      res.redirect(`/images/${imageID}`);
+      res.status(201).send(`User "${req.user.username}" posted caption "${newCaption}" to image#${imageID}.`);
+      //Old deleted front end ->
+      //res.redirect(`/images/${imageID}`);
    } catch (err) {
-      console.log(err);
       res.status(400).send(err);
-   }
-
-});
-
-//Add caption to an image with Postman
-captionRouter.post('/:imageID/:userID', async (req, res) => {
-   try{
-      const text = req.body.text;
-      const imageID = Number(req.params.imageID);
-      const userID = Number(req.params.userID);
-      await Caption.create({
-         image_id: imageID,
-         user_id: userID,
-         caption: text,
-         time: Date.now()
-      });
-      res.status(202).send(
-         `Caption posted to image with ID#${imageID}. Caption: "${text}"`
-      );
-   }catch(err){
-      console.log(err);
    }
 });
 

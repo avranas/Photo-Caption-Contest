@@ -32,23 +32,34 @@ imageRouter.get('/:id', async (req, res) => {
             ['time', 'DESC']
         ],
       });
-      const sendThis = [];
-      captionsResult.forEach(e => {
-         const newEntry = {};
-         newEntry.user = e.user.username;
-         newEntry.caption = e.caption;
-         sendThis.push(newEntry);
-      });
-      //res.status(200).send(sendThis);
+      if(imageResult){
+         const sendThis = [];
+         captionsResult.forEach(e => {
+            const newEntry = {};
+            newEntry.user = e.user.username;
+            newEntry.caption = e.caption;
+            sendThis.push(newEntry);
+         });
+         res.status(200).send(
+         {
+            imageLocation: `/images/${imageResult.image_location}`,
+            captions: sendThis
+         });
+      } else {
+         res.status(400).send("Unable to find image. Image ID might not exist");
+      }
+      /*
+      Old deleted front end ->
       res.render('view-image.ejs', {
          username: req.user.username,
          imageLocation: `/images/${imageResult.image_location}`,
          captions: sendThis,
          image_id: req.params.id
       });
+      */
    }catch(err){
       console.log(err);
-      res.status(400).send();
+      res.status(400).send(err);
    }
 });
 

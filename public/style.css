@@ -1,3 +1,21 @@
 body {
-   font-family: Verdana, Geneva, Tahoma, sans-serif
+   font-family: Verdana, Geneva, Tahoma, sans-serif;
+   color: #fff8d0;
+   background-color: #150031;
+}
+
+a:link {
+   color: #9e9ff5;
+}
+
+a:visited {
+   color: #eab4ff;
+}
+
+a:hover {
+   color: #983dff;
+}
+
+a:active {
+   color: #ff4949;
 }

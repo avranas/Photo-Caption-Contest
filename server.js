@@ -33,7 +33,7 @@ app.use('/login', require('./routes/login.js'));
 app.use('/logout', require('./routes/logout.js'));
 //app.use('/view-image', require('./routes/view-image.js'));
 
-//Front end
+/* Old deleted front end ->
 app.get('/', checkAuthenticated, async (req, res, next) => {
    res.render('index.ejs', {
       username: req.user.username
@@ -45,22 +45,7 @@ app.delete('/logout', checkAuthenticated, (req, res) => {
    req.logOut();
    req.redirect('/login');
 });
-
-//Middleware function to redirect user to a login page if they aren't logged in
-function checkAuthenticated(req, res, next) {
-   if (req.isAuthenticated()) {
-     return next();
-   }
-   res.redirect('/login'); 
- }
- 
- //Prevents logged in users to go to pages they aren't supposed to
- function checkNotAuthenticated(req, res, next) {
-   if (req.isAuthenticated()) {
-     return res.redirect('/');
-   }
-   next();
- }
+*/
 
 app.listen(PORT, () => {
    console.log(

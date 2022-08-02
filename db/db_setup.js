@@ -11,6 +11,7 @@ const db = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.D
       aquire: 30000,
       idle: 10000
    },
+   port: 5432,
    timestamps: false,
    freezeTableName: true
 });

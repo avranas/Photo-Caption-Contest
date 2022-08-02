@@ -13,7 +13,14 @@ const db = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.D
    },
    port: process.env.DB_PORT,
    timestamps: false,
-   freezeTableName: true
+   freezeTableName: true,
+   //Copied from stackoverflow, hope it works
+   dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    }
 });
 
 //Test database connection

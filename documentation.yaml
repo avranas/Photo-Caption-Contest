@@ -1,0 +1,300 @@
+openapi: 3.0.1
+info:
+  title: Residential Drunk Photo Caption Contest
+  version: 1.0.0
+  description: >-
+    An app that allows users to register accounts, and comment on photos of the
+    world champion residential drunk
+paths:
+  /images:
+    summary: Get all images
+    description: Retrieves all image file names in a json
+    get:
+      summary: Gets one image file
+      description: Gets the location of a single image file
+      operationId: get_image
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                Success:
+                  value: |-
+                    [
+                        {
+                            "id": 1,
+                            "image_location": "tyler1.jpeg"
+                        },
+                        {
+                            "id": 2,
+                            "image_location": "tyler2.jpeg"
+                        },
+                        {
+                            "id": 3,
+                            "image_location": "tyler3.jpeg"
+                        },
+                        {
+                            "id": 4,
+                            "image_location": "tyler4.jpeg"
+                        }
+                    ]
+          description: Success
+        '400':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Failure:
+                  value: Something went wrong
+          description: Failure
+      tags:
+        - Images
+  /images/:id:
+    summary: Get one image and its captions
+    description: Retrieves a single image along with all of its captions
+    get:
+      summary: Get one image with captions
+      description: Retrieves a single image along with all of its captions
+      operationId: get_images_id
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                Success:
+                  value: |-
+                    {
+                        "imageLocation": "/images/tyler2.jpeg",
+                        "captions": [
+                            {
+                                "user": "bigdaddy",
+                                "caption": "sleepy"
+                            },
+                            {
+                                "user": "Stretch",
+                                "caption": "dumb boi"
+                            },
+                            {
+                                "user": "q",
+                                "caption": "I made this caption with Postman"
+                            }
+                        ]
+                    }         
+          description: Success
+        '400':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Failure:
+                  value: Unable to find image. Image ID might not exist
+          description: Failure
+      tags:
+        - Images
+  /login:
+    summary: Login
+    description: Logs a user in
+    post:
+      summary: Log in
+      description: Logs in a user
+      operationId: post_login
+      responses:
+        '200':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Success:
+                  value: 'Successfully logged in as: Alex'
+          description: Successful login with username "Alex"
+        '401':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Invalid Credentials:
+                  value: Unauthorized
+                Already logged in:
+                  value: You need to be logged out to do that
+          description: Invalid credentials
+      tags:
+        - Login
+  /logout:
+    summary: Logout
+    description: Logs a user out
+    get:
+      summary: Log out
+      description: Logs out a user
+      operationId: get_logout
+      responses:
+        '200':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Log out:
+                  value: You have been logged out
+                Log out - Not logged in:
+                  value: No user is currently logged in
+          description: Success
+        '401':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Not logged in:
+                  value: You need to be logged in to do that
+          description: User not logged in
+      tags:
+        - Logout
+  /register:
+    summary: Registers a user
+    description: >-
+      Registers a user with a username and password. Fails if a user with the
+      same username already exists
+    post:
+      summary: Register user
+      description: Registers a new user with a username and password
+      operationId: post_register
+      responses:
+        '200':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Success:
+                  value: 'Created new user: Alex'
+          description: Success
+        '400':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Failure - Username taken:
+                  value: A user with that name already exists
+          description: Failure - Username taken
+        '401':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Already logged in:
+                  value: You need to be logged out to do that
+          description: User not logged in
+      tags:
+        - Register
+  /users:
+    summary: >-
+      Allows user with the username "admin" to retrieve all information about
+      all users
+    description: Retrieves data for all users in a json
+    get:
+      summary: Get all users
+      description: Gets all of the data for every user
+      operationId: get_users
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                Success:
+                  value: |-
+                    [
+                        {
+                            "id": 1,
+                            "username": "test_user",
+                            "password": "$2b$10$5DFnu8mS6fKxaKNGT3eCT.iEf7S.DFuc4ajKo/8Y3UJiFTHMp7vFi"
+                        },
+                        {
+                            "id": 2,
+                            "username": "user_two",
+                            "password": "$2b$10$9Oahe9EdfeeVnm12r1OAHOh5ae9/uNFeQ1wktvuGihCpY1ZpcN6c6"
+                        }
+                    ]
+          description: Default error sample response
+        '401':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Not logged in as admin:
+                  value: You need admin privileges for that
+          description: Not logged in as admin
+      tags:
+        - Users
+  /users/:id:
+    summary: >-
+      Allows user with the username "admin" to retrieve all information about
+      one user with their user id
+    description: Gets all the data for a single user
+    get:
+      summary: Get user
+      description: Gets all of the data for a single user
+      operationId: get_user
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                Success:
+                  value: |-
+                    {
+                        "id": 3,
+                        "username": "Stretch",
+                        "password": "$2b$10$5DFnu8mS6fKxaKNGT3eCT.iEf7S.DFuc4ajKo/8Y3UJiFTHMp7vFi"
+                    }
+          description: Default error sample response
+        '401':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Not logged in as admin:
+                  value: You need admin privileges for that
+          description: Not logged in as admin
+      tags:
+        - Users
+  /captions:
+    summary: Post new caption
+    description: Allows a logged in user to post a new caption to an image
+    post:
+      summary: Post new caption
+      description: Allows a logged in user to post a new caption to an image
+      operationId: post_caption
+      responses:
+        '201':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Success:
+                  value: User "admin" posted caption "Hello world" to image#1.
+          description: Success
+        '401':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                User not logged in:
+                  value: You need to be logged in to do that
+          description: User not logged in
+        default:
+          description: Default error sample response
+      tags:
+        - Caption
+  /caption:id:
+    summary: Get caption
+    description: Gets one caption
+    get:
+      summary: Get caption
+      description: Gets one caption and returns a json
+      operationId: get_caption
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                Success:
+                  value: |-
+                    [
+                        {
+                            "id": 31,
+                            "image_id": 2,
+                            "user_id": 3,
+                            "caption": "dumb boi",
+                            "time": "1658712076498",
+                            "createdAt": "2022-07-25",
+                            "updatedAt": "2022-07-25",
+                            "userId": 3
+                        }
+                    ]
+          description: Success
+      tags:
+        - Caption

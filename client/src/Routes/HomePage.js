@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const HomePage = (props) => {
   return (
-    <div>
+    <main id="home-page">
       <p>Welcome to Photo Caption Contest</p>
       <div>
         <p>
@@ -12,7 +12,7 @@ const HomePage = (props) => {
           <Link to="/register">Register</Link>
         </p>
       </div>
-    </div>
+    </main>
   );
 };
 

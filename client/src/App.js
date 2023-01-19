@@ -6,27 +6,18 @@ import RegisterPage from "./Routes/RegisterPage";
 import LoginPage from "./Routes/LoginPage";
 import Logout from "./Routes/Logout";
 import { Routes, Route } from "react-router-dom";
-import { useState } from "react";
 import ProtectedRoute from "./Components/ProtectedRoute";
 
 function App() {
-  const [username, setUsername] = useState(null);
-
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route
-          path="/login"
-          element={<LoginPage setUsername={setUsername} />}
-        />
+        <Route path="/login" element={<LoginPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/logout" element={<Logout />} />
-          <Route
-            path="/caption-page/:index"
-            element={<CaptionPage username={username} />}
-          />
+          <Route path="/caption-page/:index" element={<CaptionPage />} />
         </Route>
       </Routes>
       <footer>

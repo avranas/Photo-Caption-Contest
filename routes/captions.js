@@ -48,6 +48,12 @@ captionRouter.post("/", checkAuthenticated, async (req, res) => {
     const newCaption = req.body.new_caption;
     const imageID = req.body.image_id;
     const userID = req.user.id;
+    if (newCaption.length > 256) {
+      throw "New caption is too long";
+    }
+    if (newCaption.length === 0) {
+      throw "New caption can not be empty";
+    }
     await Caption.create({
       image_id: imageID,
       user_id: userID,

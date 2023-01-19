@@ -145,7 +145,7 @@ const RegisterPage = (props) => {
     passwordAError,
     checkIfPasswordsMatch,
     checkIfPasswordMeetsRequirements,
-    usernameInput
+    usernameInput,
   ]);
 
   const handleKeyPress = (e) => {

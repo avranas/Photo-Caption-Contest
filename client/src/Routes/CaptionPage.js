@@ -3,12 +3,24 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 
-const CaptionPage = (props) => {
+const CaptionPage = () => {
   const [images, setImages] = useState([]);
   const [imageLocation, setImageLocation] = useState(null);
   const [captions, setCaptions] = useState([]);
   const [newCaptionInput, setNewCaptionInput] = useState("");
   const { index } = useParams();
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const checkAuthenticated = async () => {
+      const response = await axios("/authenticated");
+      if (response.data) {
+        const userData = await axios("/users/current");
+        setUsername(userData.data.username);
+      }
+    };
+    checkAuthenticated();
+  }, []);
 
   useEffect(() => {
     const fetchAllImages = async () => {
@@ -30,6 +42,7 @@ const CaptionPage = (props) => {
   }, [images, index]);
 
   useEffect(() => {
+    setNewCaptionInput("");
     fetchImage();
   }, [index, images, fetchImage]);
 
@@ -58,14 +71,20 @@ const CaptionPage = (props) => {
   };
 
   const handleNewCaptionChange = (e) => {
+    if (e.target.value.length > 256) {
+      return;
+    }
     setNewCaptionInput(e.target.value);
   };
 
   return (
-    <div>
-      <p>Hello {props.username}</p>
-      <p>This is the caption page</p>
-      <ul>
+    <main id="caption-page">
+      {username !== "" && <h1>Hello {username}</h1>}
+      <h2>
+        <Link to="/logout">Logout</Link>
+      </h2>
+      <h3>Select image</h3>
+      <ul id="image-selection">
         {images.map((i, key) => {
           return (
             <li key={key}>
@@ -81,36 +100,37 @@ const CaptionPage = (props) => {
           src={`${serverUrl}/images/${imageLocation}`}
         />
       )}
-      <input
-        type="text"
-        id="username"
-        name="username"
-        className="form-control"
-        value={newCaptionInput}
-        onChange={handleNewCaptionChange}
-        onKeyUp={handleKeyPress}
-      />
-      <button
-        className="important-button"
-        type="submit"
-        value="Submit"
-        onClick={handleSubmit}
-      >
-        Submit
-      </button>
-      <ul>
+      <div id="new-caption-text">
+        <label>New caption</label>
+        <input
+          type="text"
+          className="form-control"
+          value={newCaptionInput}
+          onChange={handleNewCaptionChange}
+          onKeyUp={handleKeyPress}
+        />
+      </div>
+      <div id="new-caption-button">
+        <button
+          id="new-caption-button"
+          className="important-button"
+          type="submit"
+          value="Submit"
+          onClick={handleSubmit}
+        >
+          Submit
+        </button>
+      </div>
+      <ul id="captions-list">
         {captions.map((i, key) => {
           return (
             <li key={key}>
-              {i.user}: {i.caption}
+              <strong>{i.user}:</strong> {i.caption}
             </li>
           );
         })}
       </ul>
-      <p>
-        <Link to="/logout">Logout</Link>
-      </p>
-    </div>
+    </main>
   );
 };
 

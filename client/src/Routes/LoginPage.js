@@ -7,7 +7,7 @@ import axios from "axios";
   Next tells the login page where to navigate to after a successful login
   Error is a code that tells the login page what error page to display to a user
 */
-const LoginPage = (props) => {
+const LoginPage = () => {
   const navigate = useNavigate();
 
   const [usernameInput, setUsernameInput] = useState("");
@@ -46,8 +46,6 @@ const LoginPage = (props) => {
       };
       await axios.post("/server-login", requestBody);
       //If the passwords don't match, an error will be thrown
-      const userData = await axios("/users/current");
-      props.setUsername(userData.data.username);
       navigate("/caption-page/1");
     } catch (err) {
       console.log(err);

@@ -18,7 +18,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { httpOnly: false, secure: false, maxAge: 24 * 60 * 60 * 1000 },
+    cookie: { httpOnly: true, secure: false, maxAge: 24 * 60 * 60 * 1000 },
   })
 );
 app.use(express.static("public"));

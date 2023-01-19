@@ -1,26 +1,30 @@
-const Sequelize = require('sequelize');
-const db = require('../db_setup.js');
-const Caption = require('./Captions.js');
+const Sequelize = require("sequelize");
+const db = require("../db_setup.js");
+const Caption = require("./Captions.js");
 
-const User = db.define('user', {
-   id: {
+const User = db.define(
+  "user",
+  {
+    id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-      allowNull: false
-   },
-   username: {
+      allowNull: false,
+    },
+    username: {
       type: Sequelize.STRING,
-      allowNull: false
-   },
-   password: {
+      allowNull: false,
+    },
+    password: {
       type: Sequelize.STRING,
-      allowNull: false
-   }
-}, {
-   timestamps: false,
-   underscored: true
-});
+      allowNull: false,
+    },
+  },
+  {
+    timestamps: false,
+    underscored: true,
+  }
+);
 
 User.hasMany(Caption);
 Caption.belongsTo(User);

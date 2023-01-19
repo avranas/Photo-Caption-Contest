@@ -15,12 +15,16 @@ const db = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.D
    timestamps: false,
    freezeTableName: true,
    //Copied from stackoverflow, hope it works
-   dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      }
-    }
+
+  //TODO: Uncomment this before deployment
+
+  //  dialectOptions: {
+  //     ssl: {
+  //       require: true,
+  //       rejectUnauthorized: false
+  //     }
+  //   }
+
 });
 
 //Test database connection

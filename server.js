@@ -1,58 +1,83 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const app = express(); 
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const app = express();
 const PORT = process.env.PORT || 3000;
-const session = require('express-session');
-const passport = require('passport');
-const bodyParser = require('body-parser');
-const initalizePassport = require('./passport-config');
+const session = require("express-session");
+const passport = require("passport");
+const bodyParser = require("body-parser");
+const initalizePassport = require("./passport-config");
+const path = require("path");
+const nodeEnv = process.env.NODE_ENV;
 
-//This allows us to use .ejs
-//app.set('view-engine', 'ejs')
-//This makes req.body.username work
-app.use(express.urlencoded({extended: false}));
 app.use(cors());
-app.use(session({
-   secret: process.env.SESSION_SECRET,
-   resave: false,
-   saveUninitialized: false
-}));
-app.use( express.static( "public" ) );
+//This makes req.body.username work
+app.use(express.urlencoded({ extended: false }));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { httpOnly: false, secure: false, maxAge: 24 * 60 * 60 * 1000 },
+  })
+);
+app.use(express.static("public"));
 initalizePassport(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.json());
 
-//Routes
-app.get('/', (req, res, next) => {
-   console.log('Hello world');
-   res.status(200).send('Hello world');
-});
-app.use('/captions', require('./routes/captions.js')); 
-app.use('/users', require('./routes/users.js'));
-app.use('/images', require('./routes/images.js'));
-app.use('/register', require('./routes/register.js'));
-app.use('/login', require('./routes/login.js'));
-app.use('/logout', require('./routes/logout.js'));
-//app.use('/view-image', require('./routes/view-image.js'));
+app.use("/images", express.static(__dirname + "/assets/images"));
 
-/* Old deleted front end ->
-app.get('/', checkAuthenticated, async (req, res, next) => {
-   res.render('index.ejs', {
-      username: req.user.username
-   });
-});
-app.get('/login', checkNotAuthenticated, (req, res, next) => res.render('login.ejs'));
-app.get('/register', checkNotAuthenticated, (req, res, next) => res.render('register.ejs'));
-app.delete('/logout', checkAuthenticated, (req, res) => {
-   req.logOut();
-   req.redirect('/login');
-});
+//Serve static files from the React frontend app
+console.log("nodeEnv:", nodeEnv);
+
+if (nodeEnv === "production") {
+  app.use(express.static(path.join(__dirname, "client/build")));
+}
+
+app.use("/authenticated", require("./routes/authenticated.js"));
+app.use("/captions", require("./routes/captions.js"));
+app.use("/users", require("./routes/users.js"));
+app.use("/server-images", require("./routes/images.js"));
+app.use("/server-register", require("./routes/register.js"));
+app.use("/server-login", require("./routes/login.js"));
+app.use("/server-logout", require("./routes/logout.js"));
+
+/*
+  Error handling
+  Leaving next as a param is neccessary because this is how express finds
+  the error handler
 */
+//eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  if (!res.headersSent) {
+    res.status(err.status || 500).send(err.message);
+  }
+  //Log requests method
+  console.log(`${req.method} Request Received`);
+  //Log stack trace for error
+  console.error(err.stack);
+  //Log error message
+  console.log(err.message);
+});
+
+/*
+  After defining your routes, anything that doesn't match what's above,
+  we want to return index.html from our built React app
+*/
+if (nodeEnv === "production") {
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client/build/index.html"));
+  });
+}
+
+if (nodeEnv === "development") {
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client/public/index.html"));
+  });
+}
 
 app.listen(PORT, () => {
-   console.log(
-      `Running Photo Caption Contest - Listening on port ${PORT}`
-   );
+  console.log(`Running Photo Caption Contest - Listening on port ${PORT}`);
 });
